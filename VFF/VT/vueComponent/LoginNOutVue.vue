@@ -46,11 +46,39 @@
                             <div v-else-if="params.step === 0" class="container-fluid d-flex flex-wrap justify-content-center text-center p-0">
                                 <div class="w-100 d-flex row justify-content-center border-radius-c" style="border: 3px #767676 solid;background-color: white; padding: 0 0 1rem 0;">
                                     <div class="p-0 m-3" style="width:70px;align-self:center;height:70px;border-radius: 50%;box-shadow: 0 0 1px 1px black;overflow: hidden;">
-                                        <img :src="params.myInfo.logoPath" alt="" srcset="" class="w-100 h-100" >
+                                        <img :src="params.myInfo.logoPath? params.myInfo.logoPath: '/images/board/logos/none.png'" @error="'/images/board/logos/none.png'" alt="" srcset="" class="w-100 h-100" >
                                     </div>
                                     <div class="d-flex flex-wrap py-0 px-4" style="text-align: center;">
                                         <div class="fspll w-100" style="align-self:end;">{{params.myInfo.name}}</div>
                                         <div class="fspm w-100"><i class="bi bi-envelope"></i>&nbsp;{{params.myInfo.email}}</div>
+                                    </div>
+                                </div>
+
+                                <div class="w-100 d-flex row justify-content-center border-radius-c px-3 py-2 mt-2" style="border: 3px #767676 solid;background-color: white;">
+                                    <div class="d-flex flex-wrap m-0 p-0" style="width: 100%;text-align: start;">
+                                        <div class="fspm w-100 mt-2 d-flex">
+                                            <div class="align-self-center fspl" style="margin-right:15px;">
+                                                <i class="bi bi-cash-coin"></i>
+                                            </div>
+                                            <div class="">
+                                                {{params.myInfo.cash}}
+                                            </div>
+
+                                            <div class="container-fluid d-flex justify-content-end p-0">
+                                                <div class="btn btn-primary btn-sm">
+                                                    지갑 충전
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="fspm w-100 mt-3 mb-2 d-flex">
+                                            <div class="align-self-center fspl" style="margin-right:15px;">
+                                                <i class="bi bi-cash"></i>
+                                            </div>
+                                            <div class="">
+                                                {{params.myInfo.money}}
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -92,14 +120,13 @@
                                 <input type="submit" placeholder="변경" @click.prevent="methods.changeLogo"> -->
                             </div>
                             <div v-else-if="params.step === 1" class="container-fluid d-flex flex-wrap justify-content-center text-center p-0">
-                                <div class="w-100 d-flex row justify-content-center border-radius-c" style="border: 3px #767676 solid;background-color: white; padding: 0 0 1rem 0;">
-                                    <div class="p-0 m-3" style="width:70px;align-self:center;height:70px;border-radius: 50%;box-shadow: 0 0 1px 1px black;overflow: hidden;">
+                                <div class="w-100 d-flex row justify-content-center border-radius-c" style="border: 3px #767676 solid;background-color: white; padding: 0 0 0 0;">
+                                    <div class="p-0 mt-3" style="width:70px;align-self:center;height:70px;border-radius: 50%;box-shadow: 0 0 1px 1px black;overflow: hidden;">
                                         <img @click="methods.logoImageChange" @error="'/images/board/logos/none.png'"
-                                        id="previewLogo" :src="params.myInfo.logoPath" alt="" srcset="" class="w-100 h-100 over-cursor" >
+                                        id="previewLogo" :src="params.myInfo.logoPath? params.myInfo.logoPath: '/images/board/logos/none.png'" alt="" srcset="" class="w-100 h-100 over-cursor" >
                                     </div>
-                                    <div class="d-flex flex-wrap py-0 px-4" style="text-align: center;">
-                                        <div class="fspll w-100" style="align-self:end;">{{params.myInfo.name}}</div>
-                                        <div class="fspm w-100"><i class="bi bi-envelope"></i>&nbsp;{{params.myInfo.email}}</div>
+                                    <div class="d-flex container-fluid justify-content-center mb-3">
+                                        <input type="file" @change.capture="methods.valuedChange" id="imageFiles" accept="image/gif, image/jpeg, image/png">
                                     </div>
                                 </div>
 
@@ -107,10 +134,31 @@
                                     <div class="d-flex flex-wrap m-0 p-0" style="width: 100%;text-align: start;">
                                         <div class="fspm w-100 mt-2 d-flex">
                                             <div class="align-self-center fspl" style="margin-right:15px;">
+                                                <i class="bi bi-tag"></i>
+                                            </div>
+                                            <div class="d-flex">
+                                                <input id="changeName" type="text" :value="params.myInfo.name"
+                                                @change="methods.change(1)">
+                                                <div id="nameSide" class="jjollu is-have-plain-transition"></div>
+                                            </div>
+                                        </div>
+
+                                        <div class="fspm w-100 mt-3 d-flex">
+                                            <div class="align-self-center fspl" style="margin-right:15px;">
+                                                <i class="bi bi-envelope"></i>
+                                            </div>
+                                            <div class="">
+                                                <input id="changeEmail" type="text" :value="params.myInfo.email" @change="methods.change(2)">
+                                            </div>
+                                        </div>
+
+                                        <div class="fspm w-100 mt-3 d-flex">
+                                            <div class="align-self-center fspl" style="margin-right:15px;">
                                                 <i class="bi bi-phone"></i>
                                             </div>
                                             <div class="">
-                                                {{methods.printPhoneNum()}}
+                                                <input id="changePhoneNum" type="text" :value="methods.printPhoneNum()" @change="methods.change(3)">
+                                                <!-- {{methods.printPhoneNum()}} -->
                                             </div>
                                         </div>
                                         
@@ -125,20 +173,19 @@
                                             </div>
                                         </div>
 
-                                        <div class="fspm w-100 mt-3 mb-2 d-flex">
+                                        <!-- <div class="fspm w-100 mt-3 mb-2 d-flex">
                                             <div class="align-self-center fspl" style="margin-right:15px;">
                                                 <i class="bi bi-award"></i>
                                             </div>
                                             <div class="">
                                                 {{params.myInfo.admin==='o'? '관리자': params.myInfo.admin==='m'? '매니저': '유저'}}
                                             </div>
-                                        </div>
+                                        </div> -->
 
                                         <!-- <div class="w-100" style="border-top: 0.5px black solid; height:1px;"></div> -->
                                     </div>
                                 </div>
 
-                                <input type="file" @change.capture="methods.valuedChange" id="imageFiles" accept="image/gif, image/jpeg, image/png">
                                 <!-- <input type="submit" placeholder="변경" @click.prevent="methods.changeLogo"> -->
                             </div>
                         </transition>
@@ -296,6 +343,38 @@ export default {
                     store.commit('LOGIN_CHECK');
                 });
             },
+            change: (i)=>{
+                switch(i){
+                    case 0:
+                        params.value.updateInfo.logo.isChanged = true;
+                    break;
+
+                    case 1:
+                        if(NameRegExp.test(document.getElementById("changeName").value)
+                            || document.getElementById("changeName").value == params.value.myInfo.name){
+                            document.getElementById("nameSide").style.background = "green";
+                            // console.log("이름 바꾼거 확인했고 값은 "+document.getElementById("changeName").value+" 이다.");
+                            params.value.updateInfo.name.isChanged = true;
+                        } else{
+                            document.getElementById("nameSide").style.background = "red";
+                            params.value.updateInfo.name.isChanged = false;
+                        }
+                        
+                    break;
+
+                    case 2:
+                        params.value.updateInfo.email.isChanged = true;
+                    break;
+
+                    case 3:
+                        params.value.updateInfo.address.isChanged = true;
+                    break;
+
+                    case 4:
+                        params.value.updateInfo.pw.isChanged = true;
+                    break;
+                }
+            },
             changeLogo: ()=>{
                 var tempFormData = new FormData();
 
@@ -345,9 +424,11 @@ export default {
                 }
             },
             printPhoneNum: ()=>{
-                return `${params.value.myInfo.phone.slice(0,3)}-${params.value.myInfo.phone.slice(3,7)}-${params.value.myInfo.phone.slice(7)}`;
+                // return `${params.value.myInfo.phone.slice(0,3)}-${params.value.myInfo.phone.slice(3,7)}-${params.value.myInfo.phone.slice(7)}`;
+                return params.value.myInfo.phone;
             },
             logoImageChange: ()=>{
+                methods.change(0);
                 document.getElementById('imageFiles').click();
             },
             getLogoHeight: ()=>{
@@ -409,31 +490,105 @@ export default {
                 methods.openLo(0, "불러오는 중", "내 정보 창 오픈", funcList);
             },
             openLo1:()=>{
+                params.value.updateInfo = {
+                    logo: {after: null, isChanged: false},
+                    name: {after: null, isChanged: false},
+                    pw: {after: null, isChanged: false},
+                    phone: {after: null, isChanged: false},
+                    email: {after: null, isChanged: false},
+                    address: {after: null, isChanged: false},
+                };
+
                 methods.openLo(1, "변경 창 여는 중", "변경 창 오픈");
             },
             openLo2: ()=>{
                 const funcList = [
-                    async ()=>{
-                        try {
-                            let tempFormData = new FormData();
-                            let imgFiles = document.getElementById('imageFiles');
+                    async ()=>{ // logo change request
+                        if(params.value.updateInfo.logo.isChanged){
+                            try {
+                                let tempFormData = new FormData();
+                                let imgFiles = document.getElementById('imageFiles');
 
-                            for(var i = 0; i < imgFiles.files.length; i++){
-                                tempFormData.append('imageFiles', imgFiles.files[i]);
+                                for(var i = 0; i < imgFiles.files.length; i++){
+                                    tempFormData.append('imageFiles', imgFiles.files[i]);
+                                }
+
+                                let result = await AXIOS.put(`/community/logo`, tempFormData, {headers:{"Content-Type": "multipart/form-data"}});
+                                
+                                if(result.status === 200){
+                                    params.value.waittingString = result.data.result;
+                                } else{
+                                    params.value.waittingString = "로고 변경에 실패했습니다.";
+                                }
                             }
-
-                            let result = await AXIOS.put(`/community/logo`, tempFormData, {headers:{"Content-Type": "multipart/form-data"}});
+                            catch (error) {
+                                throw error;
+                            }
+                        }
+                    },
+                    async ()=>{ // name change
+                        if(params.value.updateInfo.name.isChanged){
                             
-                            if(result.status === 200){
-                                params.value.waittingString = result.data.result;
-                            } else{
-                                params.value.waittingString = "로고 변경에 실패했습니다.";
+                            try{
+                                // params.value.waittingString = "이름을 바꿧습니다.";
+                                if(NameRegExp.test(document.getElementById("changeName").value)){
+                                    console.log("이름 바꾼거 확인했고 값은 "+document.getElementById("changeName").value+" 이다.");
+                                }
+                            }
+                            catch(error){
+                                throw error;
                             }
                         }
-                        catch (error) {
-                            throw error;
+                    },
+                    async ()=>{ // name change
+                        if(params.value.updateInfo.phone.isChanged){
+                            try{
+                                // params.value.waittingString = "번호를 바꿧습니다.";
+                            }
+                            catch(error){
+                                throw error;
+                            }
                         }
-                    }, 
+                    },
+                    async ()=>{ // name change
+                        if(params.value.updateInfo.email.isChanged){
+                            try{
+                                // params.value.waittingString = "이메일을 바꿧습니다.";
+                            }
+                            catch(error){
+                                throw error;
+                            }
+                        }
+                    },
+                    async ()=>{ // name change
+                        if(params.value.updateInfo.address.isChanged){
+                            try{
+                                // params.value.waittingString = "주소를 바꿧습니다.";
+                            }
+                            catch(error){
+                                throw error;
+                            }
+                        }
+                    },
+                    async ()=>{ // name change
+                        if(params.value.updateInfo.pw.isChanged){
+                            try{
+
+                            }
+                            catch(error){
+                                throw error;
+                            }
+                        }
+                    },
+                    async ()=>{
+                        try{
+                            console.log(params.value.updateInfo);
+                            await store.commit('UPDATE_INFO');
+                        }
+                        catch(error){
+                            console.log(error);
+                        }
+                    }
                 ];
 
 
@@ -486,6 +641,16 @@ a, a:hover{
 
 #loadingding{
     animation: loadingAnimation 2s infinite ease;
+}
+
+.jjollu{
+    margin: 0 0 0 15px;
+    padding: 0;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background-color: black;
+    align-self: center;
 }
 
 @keyframes loadingAnimation {

@@ -26,7 +26,7 @@ export default {
 
         const methods = {
             backCaller: ()=>{
-                context.emit('CHANGEPAGE', {isOpen: 'a'});
+                context.emit('BACKCALLER', {isOpen: 'a'});
             }
         };
 
