@@ -14,28 +14,20 @@
 
         <div id="DMRootContainer" class="d-flex flex-wrap justify-content-center invisible-scrollbar">
             <div id="DMHeaderWrapper" class="d-flex justify-content-around align-items-center text-center">
-                <div class="w-25"><span class="fspl">메인</span></div>
-                <div class="w-25"><span class="fspl">메인</span></div>
-                <div class="w-25"><span class="fspl">메인</span></div>
+                <div class="w-25"><span class="fspl"></span></div>
+                <div class="w-25"><span class="fspl"></span></div>
+                <div class="w-25"><span class="fspl"></span></div>
                 <div class="w-25"><span class="fspll"><i class="bi bi-x over-cursor" @click="methods.beforeCloseDMVue" ></i></span></div>
             </div>
             <div id="DMContentWrapper" class="d-flex flex-wrap justify-content-center align-items-center m-0">
-                <div id="DMContents" class="d-flex flex-wrap justify-content-center align-items-center m-0 border-radius-b">
+                <div id="DMContents" class="d-flex flex-wrap justify-content-center align-items-center m-0 border-radius-b grey-border">
                     <DMTestPartVue :name="'DM'" :alertType="'info'"/>
                     <DMTestPartVue :name="'1:1문의'" :alertType="'primary'"/>
                     <DMTestPartVue :name="'고객센터'" :alertType="'success'"/>
-                    <DMTestPartVue :name="'DM'" :alertType="'info'"/>
-                    <DMTestPartVue :name="'1:1문의'" :alertType="'primary'"/>
-                    <DMTestPartVue :name="'고객센터'" :alertType="'success'"/>
-                    <DMTestPartVue :name="'DM'" :alertType="'info'"/>
-                    <DMTestPartVue :name="'1:1문의'" :alertType="'primary'"/>
-                    <DMTestPartVue :name="'고객센터'" :alertType="'success'"/>
-                    <DMTestPartVue :name="'DM'" :alertType="'info'"/>
-                    <DMTestPartVue :name="'1:1문의'" :alertType="'primary'"/>
-                    <DMTestPartVue :name="'고객센터'" :alertType="'success'"/>
-                    <DMTestPartVue :name="'DM'" :alertType="'info'"/>
-                    <DMTestPartVue :name="'1:1문의'" :alertType="'primary'"/>
-                    <DMTestPartVue :name="'고객센터'" :alertType="'success'"/>
+                </div>
+
+                <div id="NotifiRootWrapper" class="d-flex flex-wrap justify-content-center align-items-center mt-3 mx-0 border-radius-b grey-border w-100">
+                    <NotifiList/>
                 </div>
             </div>
         </div>
@@ -49,11 +41,12 @@ import Store from '../../VXS/VuexStore'
 import AXIOS from 'axios';
 
 import DMTestPartVue from './dmParts/DMTestPartVue.vue';
+import NotifiList from './dmParts/notifiFolder/NotifiList.vue';
 
 export default {
     name:'DMVue',
     components: {
-        DMTestPartVue
+        DMTestPartVue, NotifiList
     },
     setup(props, context) {
         const store = Store;
@@ -119,6 +112,7 @@ export default {
     top:0;
     background: white;
     width: 100%;
+    height: fit-content;
     border-bottom: 2px black solid;
     min-height: 50px;
     z-index: 50;
@@ -128,7 +122,12 @@ export default {
 #DMContents{
     width: 100%;
     padding: 10px;
-    box-shadow: 0px 0px 2px;
+    /* box-shadow: 0px 0px 2px; */
+    
+}
+
+.grey-border{
+    border: 3px solid rgb(118, 118, 118);
 }
 
 #DMRootBackground{
