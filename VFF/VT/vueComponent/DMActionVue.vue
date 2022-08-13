@@ -29,6 +29,7 @@ export default {
         const methods = {
             onDMPage: ()=>{ 
                 store.commit("SET_IS_DM_VIEW", {isView: true});
+                store.state.existNotifi = false;
             }
         };
 

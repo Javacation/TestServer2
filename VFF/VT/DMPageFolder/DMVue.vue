@@ -26,7 +26,11 @@
                     <DMTestPartVue :name="'고객센터'" :alertType="'success'"/>
                 </div>
 
-                <div id="NotifiRootWrapper" class="d-flex flex-wrap justify-content-center align-items-center mt-3 mx-0 border-radius-b grey-border w-100">
+                <div id="DmRootWrapper" class="d-flex flex-wrap justify-content-center align-items-center mt-5 mx-0 border-radius-b grey-border w-100">
+                    <DmList/>
+                </div>
+
+                <div id="NotifiRootWrapper" class="d-flex flex-wrap justify-content-center align-items-center mt-5 mx-0 border-radius-b grey-border w-100">
                     <NotifiList/>
                 </div>
             </div>
@@ -42,11 +46,12 @@ import AXIOS from 'axios';
 
 import DMTestPartVue from './dmParts/DMTestPartVue.vue';
 import NotifiList from './dmParts/notifiFolder/NotifiList.vue';
+import DmList from './dmParts/dmFolder/DmList.vue';
 
 export default {
     name:'DMVue',
     components: {
-        DMTestPartVue, NotifiList
+        DMTestPartVue, NotifiList, DmList
     },
     setup(props, context) {
         const store = Store;

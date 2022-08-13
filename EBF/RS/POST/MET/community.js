@@ -281,8 +281,8 @@ module.exports = {
 
                             } else if(dbresult.length > 0){
                                 var msg = {
-                                    'type': 'info',
-                                    'content': `${accessToken.id}님이 글을 작성했습니다.`,
+                                    'type': 100,
+                                    'content': `${commonFunction.changeBase64FromString(tempBoard4Write.title)}`,
                                 };
                                 var frList = [];
 
@@ -293,9 +293,9 @@ module.exports = {
                                 }
 
                                 for(let i in frList){
-                                    var PA1 = dotEnv.NOTIFI_TABLE;
-                                    var PA2 = "(id, content)"; 
-                                    var PA3 = `'${frList[i]}', '${JSON.stringify(msg)}'`;
+                                    var PA1 = 'communityNotifi';
+                                    var PA2 = "(publisher, receiver, content)"; 
+                                    var PA3 = `'${accessToken.id}', '${frList[i]}', '${JSON.stringify(msg)}'`;
                                     
                                     [dbresult, dbfield] = await DBReserved.dynamic_insert(PA1, PA2, PA3);
 

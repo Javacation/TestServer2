@@ -115,6 +115,7 @@ module.exports = {
                             result.result.push({
                                 nindex: dbresult[i]['nindex'],
                                 publisher: dbresult[i]['publisher'],
+                                name: dbresult[i]['name'],
                                 notifidate: dbresult[i]['notifidate'],
                                 isview: dbresult[i]['isview'],
                                 content: dbresult[i]['content'],
@@ -127,10 +128,16 @@ module.exports = {
                             indexString = '-1';
                         }
 
-                        await DBReserved.dynamic_update(
-                            dotEnv.NOTIFI_TABLE,
-                            'isview=1',
-                            `nindex IN (${indexString})`);
+                        try{
+                            DBReserved.dynamic_update(
+                                'communityNotifi',
+                                'isview=1',
+                                `nindex IN (${indexString})`);
+                        }
+                        catch(err){
+                            console.log(err);
+                        }
+                        
                     }
                 }
                 catch(error){
