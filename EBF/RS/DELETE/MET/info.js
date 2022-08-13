@@ -28,46 +28,60 @@ module.exports = {
                         var PA1, PA2, PA3;
 
                         PA1 = '*';
-                        PA2 = dotEnv.LOGO_TABLE;
-                        PA3 = `id='${accessToken.id}'`;
+                        PA2 = 'userinfo';
+                        PA3 = `id='${accessToken.id}' AND pw='${req.body.pw}'`;
 
                         [dbresult, dbfield] = await DBReserved.dynamic_select(PA1, PA2, PA3);
 
                         if(dbresult === null){
                             result.result = '회원탈퇴중 문제가 발생했습니다. (100)';
                             result.code = 500;
+                        } else if(dbresult.length === 0){
+                            result.result = '비밀번호를 확인해주세요.';
+                            result.code = 400;
                         } else{
-                            if(dbresult.length !== 0){ // 회원탈퇴중 로고를 발견해서 삭제
-                                commonFunction.deleteFile(dbresult[0].logoPath? dbresult[0].logoPath: '', path.join(__dirname, '..', '..', '..', '..', 'public'));
-                            } 
-
                             PA1 = '*';
-                            PA2 = dotEnv.BOARD_TABLE;
-                            PA3 = `uploadId='${accessToken.id}'`;
-                            
+                            PA2 = dotEnv.LOGO_TABLE;
+                            PA3 = `id='${accessToken.id}'`;
+
                             [dbresult, dbfield] = await DBReserved.dynamic_select(PA1, PA2, PA3);
 
                             if(dbresult === null){
-                                result.result = '회원탈퇴중 문제가 발생했습니다. (104)';
+                                result.result = '회원탈퇴중 문제가 발생했습니다. (101)';
                                 result.code = 500;
                             } else{
-                                if(dbresult.length !== 0){ // 회원탈퇴중 게시글에서 올린 이미지 확인후 삭제
-                                    for(var i = 0; i < dbresult.length; i++){
-                                        commonFunction.deleteFile(dbresult[i].imgPath? dbresult[i].imgPath: '', path.join(__dirname, '..', '..', '..', '..', 'public'));
-                                    }
-                                }
+                                if(dbresult.length !== 0){ // 회원탈퇴중 로고를 발견해서 삭제
+                                    commonFunction.deleteFile(dbresult[0].logoPath? dbresult[0].logoPath: '', path.join(__dirname, '..', '..', '..', '..', 'public'));
+                                } 
 
-                                PA1 = 'userinfo';
-                                PA2 = `id='${accessToken.id}'`;
+                                PA1 = '*';
+                                PA2 = dotEnv.BOARD_TABLE;
+                                PA3 = `uploadId='${accessToken.id}'`;
+                                
+                                [dbresult, dbfield] = await DBReserved.dynamic_select(PA1, PA2, PA3);
 
-                                [dbresult, dbfield] = await DBReserved.dynamic_delete(PA1, PA2);
-
-                                if(dbresult > 0){
-                                    result.result = '회원탈퇴가 성공적으로 실행되었습니다.';
-                                    result.code = 200;
-                                    res.clearCookie('accessToken');
+                                if(dbresult === null){
+                                    result.result = '회원탈퇴중 문제가 발생했습니다. (104)';
+                                    result.code = 500;
                                 } else{
-                                    throw new Error("회원탈퇴 실패");
+                                    if(dbresult.length !== 0){ // 회원탈퇴중 게시글에서 올린 이미지 확인후 삭제
+                                        for(var i = 0; i < dbresult.length; i++){
+                                            commonFunction.deleteFile(dbresult[i].imgPath? dbresult[i].imgPath: '', path.join(__dirname, '..', '..', '..', '..', 'public'));
+                                        }
+                                    }
+
+                                    PA1 = 'userinfo';
+                                    PA2 = `id='${accessToken.id}'`;
+
+                                    [dbresult, dbfield] = await DBReserved.dynamic_delete(PA1, PA2);
+
+                                    if(dbresult > 0){
+                                        result.result = '회원탈퇴가 성공적으로 실행되었습니다.';
+                                        result.code = 200;
+                                        res.clearCookie('accessToken');
+                                    } else{
+                                        throw new Error("회원탈퇴 실패");
+                                    }
                                 }
                             }
                         }

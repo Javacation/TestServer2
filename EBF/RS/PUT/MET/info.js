@@ -76,6 +76,7 @@ module.exports = {
 
                 if(commonFunction.emailRegCheck(after) || after.trim().length === 0){ // 바꾸려는 이메일이 정규식에 부합한지 확인 또는 없는경우
                     try{
+                        console.log(after);
                         [dbresult, dbfield] = await DBReserved.dynamic_select('*', 'moreinfo', `email='${after}'`);
 
                         if(!dbresult){
@@ -140,7 +141,7 @@ module.exports = {
                 if(commonFunction.nameRegCheck(after)){ // 바꾸려는 이름이 정규식에 부합한지 확인
                     try{
                         [dbresult, dbfield] = await DBReserved.dynamic_update(
-                            "more", 
+                            "moreinfo", 
                             `name='${after}'`,
                             `id='${accessToken.id}'`);
 

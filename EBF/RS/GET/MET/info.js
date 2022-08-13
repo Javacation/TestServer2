@@ -62,6 +62,94 @@ module.exports = {
 
         commonFunction.sendResult(res, result);
     },
+    notifi_f: async function(req, res){
+        var result = {
+            result: [
+
+            ],
+            code: 200
+        };
+        let dbresult, dbfield;
+        let accessToken = TokenManager.getToken(req);
+    
+        if(accessToken === null){
+            result.result = '로그인이 필요한 서비스입니다.';
+            result.code = 400;
+        } else {
+            accessToken = await TokenManager.verifyToken(accessToken, req);
+
+            if(Number.isInteger(accessToken)){
+                TokenManager.tokenVerifyValue(accessToken, result);
+            } else{
+                try{
+                    if(req.query.nindex){
+                        [dbresult, dbfield] = await DBReserved.dynamic_select(
+                            "*", 
+                            `${dotEnv.NOTIFI_TABLE} as nt`, 
+                            `nt.receiver='${accessToken.id}' AND nt.nindex < ${req.query.nindex} ORDER BY nt.nindex DESC LIMIT 7`);
+                    } else{
+                        [dbresult, dbfield] = await DBReserved.dynamic_select(
+                            "*", 
+                            `${dotEnv.NOTIFI_TABLE} as nt`, 
+                            `nt.receiver='${accessToken.id}' ORDER BY nt.nindex DESC LIMIT 7`);
+                    }
+
+                    // [dbresult, dbfield] = await DBReserved.dynamic_select(
+                    //     "*", 
+                    //     `${dotEnv.NOTIFI_TABLE} as nt`, 
+                    //     `nt.receiver='${accessToken.id}' ORDER BY nt.nindex DESC LIMIT ${7*(req.query.page-1)}, ${7*(req.query.page)-1}`);
+                    
+                    if(dbresult === null){ // 정보 불러오기 실패
+                        result.result = '정보를 불러오는데 실패했습니다.';
+                        result.code = 500;
+                    } else{ // 정보 불러오기 성공
+                        let indexString = '';
+
+                        for(i in dbresult){
+                            indexString = indexString + dbresult[i]['nindex'];
+
+                            if(parseInt(i)+1 != dbresult.length){
+                                indexString = indexString + ',';
+                            }
+
+                            result.result.push({
+                                nindex: dbresult[i]['nindex'],
+                                publisher: dbresult[i]['publisher'],
+                                name: dbresult[i]['name'],
+                                notifidate: dbresult[i]['notifidate'],
+                                isview: dbresult[i]['isview'],
+                                content: dbresult[i]['content'],
+                            });
+                        }
+                        result.code = 200;
+                        
+
+                        if(indexString.length === 0){
+                            indexString = '-1';
+                        }
+
+                        try{
+                            DBReserved.dynamic_update(
+                                'communityNotifi',
+                                'isview=1',
+                                `nindex IN (${indexString})`);
+                        }
+                        catch(err){
+                            console.log(err);
+                        }
+                        
+                    }
+                }
+                catch(error){
+                    console.log(error);
+                    result.result = '정보를 불러오는 중 오류가 발생했습니다. (100)'
+                    result.code = 500;
+                }
+            }
+        }
+
+        commonFunction.sendResult(res, result);
+    },
     friends_f: async function(req, res){
         var result = {
             result: null,
@@ -255,7 +343,10 @@ module.exports = {
     },
     cash_history_f: async (req, res)=>{
         var result = {
-            result: null,
+            result: {
+                cashLog: null,
+                availCashPage: null,
+            },
             code: 200
         };
     
@@ -275,15 +366,15 @@ module.exports = {
                     [dbresult, dbfield] = await DBReserved.dynamic_select(
                         "*", 
                         dotEnv.CASH_HISTORY_TABLE, 
-                        `id='${accessToken.id}' ORDER BY chindex DESC`);
+                        `id='${accessToken.id}' ORDER BY chindex DESC LIMIT ${5*(req.query.page-1)}, ${(5*req.query.page)-1}`);
                     
-                    if(dbresult === null){ // 매칭 결과 목록 불러오기 실패
+                    if(dbresult === null){ // 충전 결과 목록 불러오기 실패
                         result.result = '충전 기록을 불러오는데 실패했습니다.';
                         result.code = 500;
-                    } else{ // 매칭 결과 목록 불러오기 성공
+                    } else{ // 충전 결과 목록 불러오기 성공
                         var array = [];
                     
-                        if(dbresult.length > 0) // 매칭 결과가 있으면 배열에 추가
+                        if(dbresult.length > 0){ // 충전 결과가 있으면 배열에 추가
                             for(var i = 0; i < dbresult.length; i++) {
                                 var tempDBResult = Object.assign({}, dbresult[i]);
 
@@ -292,8 +383,17 @@ module.exports = {
 
                                 array.push(tempDBResult);
                             }
+                        }
                         
-                        result.result = array;
+                        [dbresult, dbfield] = await DBReserved.dynamic_select(
+                            "count(*)", 
+                            dotEnv.CASH_HISTORY_TABLE, 
+                            `id='${accessToken.id}'`);
+                            
+                        
+                        result.result.cashLog = array;
+                        result.result.availCashPage = (dbresult[0]['count(*)'] <= 5)? 1: parseInt(dbresult[0]['count(*)']/5)+1;
+
                         result.code = 200;
                     }
                 }

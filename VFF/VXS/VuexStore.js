@@ -32,7 +32,7 @@ export default new Vuex.Store({
         currentVideoFrame: '',
         currentAdminActionList: [], socket: null,
         searchContents: [], currentSearchCode: 0, searchStat: 0, latestSearchOption: {},
-        objectionIndex: -1, isObjectionBoard: true, existNotifi: true, notifiList: ['hello world'],
+        objectionIndex: -1, isObjectionBoard: true, existNotifi: false, notifiList: ['hello world'],
         isViewDm: false, dmViewOn: false,
     },
 

@@ -21,20 +21,20 @@
                     </div>
                     <div id="introduceWrapper" class="d-flex justify-content-center profileWrapper text-center fsps px-3">
                         <div id="introduce">
-                            자기소개자기소개자기소개자기소개자기소개자기소개자기소개
+                            -------
                         </div>
                     </div>
                     <div
                     id="variousInfoWrapper" class="d-flex justify-content-center profileWrapper text-center fsps px-3">
                         <div id="variousInfo" class="d-flex justify-content-around">
                             <div>
-                                팔로워 수
+                                -------
                             </div>
                             <div>
-                                팔로워 수
+                                -------
                             </div>
                             <div>
-                                팔로워 수
+                                -------
                             </div>
                         </div>
                     </div>

@@ -59,6 +59,8 @@ module.exports = {
             // socket.join('test_room_0');
             // socket_io_json.socket_io.to('test_room_0').emit('test_room_0_send', {data: 'data'});
 
+            
+
             socket.on('upload_boards', ()=>{
                 socket_io_json.socket_io.emit('refreshOn', null);
             });
@@ -93,6 +95,19 @@ module.exports = {
                                 result.code = 0;
 
                                 socket.join(socket.atkSep.id);
+
+                                var PA1, PA2, PA3;
+                                var dbresult, dbfield;
+
+                                PA1 = '*';
+                                PA2 = 'communityNotifi';
+                                PA3 = `receiver='${socket.atkSep.id}' AND isView=0`;
+
+                                [dbresult, dbfield] = await dbReserved.dynamic_select(PA1, PA2, PA3);
+
+                                if(dbresult.length !== 0){
+                                    socket.emit("create_notifi", {});
+                                }
                             }
                         } 
                         catch (error) {

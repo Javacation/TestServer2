@@ -11,8 +11,9 @@ const communityFunction = require('./MET/community');
             table: 바디에 테이블명 삽입
             condition: 바디에 테이블에서 삭제할 조건 삽입
 
-    out
-        현재 로그인중인 아이디 삭제
+    out 현재 로그인중인 아이디 삭제
+        body
+            pw: 비밀번호
 
     seceision
         body
