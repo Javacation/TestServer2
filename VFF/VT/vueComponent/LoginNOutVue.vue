@@ -118,7 +118,12 @@
                                         </div>
 
                                         <!-- <div class="w-100" style="border-top: 0.5px black solid; height:1px;"></div> -->
-                                        <div class="container-fluid is-have-plain-transition mt-5 d-flex justify-content-center px-0">
+                                        <div class="container-fluid is-have-plain-transition mt-5 d-flex flex-wrap justify-content-center px-0">
+                                            <transition name="fast-fade">
+                                                <div v-if="params.deleteCounter === 1" class="w-100 p-2 mb-2" style="border: 1px solid black; color:red;">
+                                                    회원탈퇴 시 개인정보 및 AccroMemories에서 만들어진 모든 데이터는 삭제됩니다. 
+                                                </div>
+                                            </transition>
                                             <transition name="fast-fade">
                                                 <input 
                                                 v-if="params.deleteCounter === 1" 

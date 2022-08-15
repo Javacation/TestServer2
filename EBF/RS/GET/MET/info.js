@@ -62,6 +62,72 @@ module.exports = {
 
         commonFunction.sendResult(res, result);
     },
+    friend_follow_f: async (req, res)=>{
+        var result = {
+            result: {
+                friend: [],
+                follow: [],
+            },
+            code: 200
+        };
+        let dbresult, dbfield;
+        let accessToken = TokenManager.getToken(req);
+    
+        if(accessToken === null){
+            result.result = '로그인이 필요한 서비스입니다.';
+            result.code = 400;
+        } else {
+            accessToken = await TokenManager.verifyToken(accessToken, req);
+
+            if(Number.isInteger(accessToken)){
+                TokenManager.tokenVerifyValue(accessToken, result);
+            } else{
+                try{
+                    var PA1, PA2, PA3;
+                    PA1 = 'flt.follow as follow, mi.name as name';
+                    PA2 = `${dotEnv.FOLLOW_TABLE} as flt LEFT OUTER JOIN moreinfo as mi ON flt.follow=mi.id`;
+                    PA3 = `flt.id='${accessToken.id}'`;
+
+                    [dbresult, dbfield] = await DBReserved.dynamic_select(PA1, PA2, PA3);
+                    
+                    if(dbresult === null){
+                        result.result.follow = '팔로우를 불러오는데 실패했습니다.';
+                    } else{
+                        for(var i in dbresult){
+                            result.result.follow.push({
+                                id: dbresult[i]['follow'],
+                                name: dbresult[i]['name'],
+                            });
+                        }
+                    }
+
+                    PA1 = 'fr.friend as friend, mi.name as name';
+                    PA2 = `friend as fr LEFT OUTER JOIN moreinfo as mi ON fr.friend=mi.id`;
+                    PA3 = `fr.id='${accessToken.id}'`;
+
+                    [dbresult, dbfield] = await DBReserved.dynamic_select(PA1, PA2, PA3);
+                    
+                    if(dbresult === null){
+                        result.result.friend = '친구를 불러오는데 실패했습니다.';
+                    } else{
+                        for(var i in dbresult){
+                            result.result.friend.push({
+                                id: dbresult[i]['friend'],
+                                name: dbresult[i]['name'],
+                            });
+                        }
+                    }
+                }
+                catch(error){
+                    console.log(error);
+                    result.result = 'DM 리스트를 불러오는데 실패했습니다.';
+                    result.code = 500;
+                }
+            }
+        }
+
+        commonFunction.sendResult(res, result);
+    },
     notifi_f: async function(req, res){
         var result = {
             result: [

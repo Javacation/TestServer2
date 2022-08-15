@@ -15,7 +15,7 @@
                     관리자 페이지
                 </div>
                 <div id="titleFrame" class="fspl">
-                    부제목 써줘잉
+                    ------------
                 </div>
             </div>
         </div>

@@ -37,8 +37,8 @@
                     닫기
                 </div>
             </div>
-            <div v-else
-            id="notifiListIsUnvisible" class="d-flex flex-wrap container-fluid justify-content-center text-center px-0">
+            <div v-else @click="methods.notifiChange(true)"
+            id="notifiListIsUnvisible" class="d-flex flex-wrap container-fluid justify-content-center text-center px-0 py-0 over-cursor">
             </div>
         </transition>
     </div>

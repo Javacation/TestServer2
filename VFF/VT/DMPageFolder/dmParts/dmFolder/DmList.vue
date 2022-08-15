@@ -16,7 +16,8 @@
             <div v-if="params.dmVisible" id="dmListIsVisible" class="d-flex flex-wrap container-fluid justify-content-center text-center px-0 pb-2">
                 <DmPart />
             </div>
-            <div v-else id="dmListIsUnVisible" class="d-flex flex-wrap container-fluid justify-content-center text-center px-0">
+            <div v-else id="dmListIsUnVisible" @click="methods.dmChange(true)"
+            class="d-flex flex-wrap container-fluid justify-content-center text-center px-0 py-0 over-cursor">
 
             </div>
         </transition>
@@ -56,7 +57,7 @@ export default {
         });
 
         onUnmounted(()=>{
-
+            methods.dmChange(false);
         });
 
         return{

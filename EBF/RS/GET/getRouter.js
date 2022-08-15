@@ -119,6 +119,8 @@ router.get('/info/:target', async (req, res)=>{
 
     if(target_id === 'base'){
         infoFunction.base_f(req, res);
+    } else if(target_id === 'dmList'){
+        infoFunction.friend_follow_f(req, res);
     } else if(target_id === 'notifi'){
         infoFunction.notifi_f(req, res);
     } else if(target_id === 'friend'){
